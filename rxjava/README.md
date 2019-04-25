@@ -54,20 +54,13 @@
 ```
  可以看到Observable.create(OnSubscribe<T> f)仅是在初始化Observable<T>类的成员变量final OnSubscribe<T> onSubscribe,也就是将我们Demo类RxJavaDemoActivity.java中的匿名类部类
 ```
-new Observer<String>() {
-            @Override
-            public void onCompleted() {
-                Log.i(LOG, "createMethodWidthObserver onComplete()\n");
-            }
+new Observable.OnSubscribe<String>() {
 
             @Override
-            public void onError(Throwable e) {
-
-            }
-
-            @Override
-            public void onNext(String s) {
-                Log.i(LOG, "createMethodWidthObserver onNext()" + s);
+            public void call(Subscriber<? super String> subscriber) {
+                subscriber.onNext("hello");
+                subscriber.onNext("world");
+                subscriber.onCompleted();
             }
         }
 ```
