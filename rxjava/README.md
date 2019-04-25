@@ -39,7 +39,7 @@
         });
     }
 ```
-##### 首先我们分析 Observable.create(OnSubscribe<T> f)部分
+#### 首先我们分析 Observable.create(OnSubscribe<T> f)部分
 跟进Rxjava的源码
 ```
     public final static <T> Observable<T> create(OnSubscribe<T> f) {
@@ -52,7 +52,7 @@
         this.onSubscribe = f;
     }
 ```
- 原来Observable.create(OnSubscribe<T> f)仅是在初始化Observable<T>类的成员变量final OnSubscribe<T> onSubscribe,也就是将我们在RxJavaDemoActivity类中的匿名类部类
+ 可以看到Observable.create(OnSubscribe<T> f)仅是在初始化Observable<T>类的成员变量final OnSubscribe<T> onSubscribe,也就是将我们Demo类RxJavaDemoActivity.java中的匿名类部类
 ```
 new Observer<String>() {
             @Override
@@ -71,7 +71,7 @@ new Observer<String>() {
             }
         }
 ```
- 的对象赋值给Observable<T>类的成员变量final OnSubscribe<T> onSubscribe;
+ 赋值给Observable<T>类的成员变量final OnSubscribe<T> onSubscribe;
 ##### 接下来我们分析比较关键的subscribe(final Observer<? super T> observer)方法
 跟进代码
 ```
@@ -99,7 +99,7 @@ new Observer<String>() {
         });
     }
 ```
- if分支因为不是Subscriber所以直接跳过，继续调用内部的subscribe方法
+ if分支不是Subscriber类型所以直接跳过，继续调用内部的subscribe方法
 ```
     public final Subscription subscribe(Subscriber<? super T> subscriber) {
         return Observable.subscribe(subscriber, this);
@@ -138,7 +138,7 @@ private static <T> Subscription subscribe(Subscriber<? super T> subscriber, Obse
 ```
 hook.onSubscribeStart(observable, observable.onSubscribe).call(subscriber);
 ```
-这又是一个钩子方法，我们忽略特殊情况，考虑一般性,执行hook.onSubscribeStart(observable, observable.onSubscribe)后返回的就是传入的observable.onSubscribe变量
+这又是一个钩子方法，当前直接忽略,执行hook.onSubscribeStart(observable, observable.onSubscribe)后返回的就是传入的observable.onSubscribe变量
 **也就是第一部分赋值的Observable<T>类的成员变量final OnSubscribe<T> onSubscribe;**，在调用call(T t)方法，也就自然会调用到第一部分匿名类部类的call(T t)方法
 ```
 new Observable.OnSubscribe<String>() {
@@ -158,7 +158,26 @@ call(T t)方法里面的参数就是我们传入的**new出来的new Subscriber<
                 observer.onNext(t);
             }
 ```
-的onNext方法，这也就解释了程序执行的结果为helloworld的原因
+的onNext()方法，其中的observer变量就是我们一开始在我们Demo类RxJavaDemoActivity.java中的匿名类部类
+```
+new Observer<String>() {
+            @Override
+            public void onCompleted() {
+                Log.i(LOG, "createMethodWidthObserver onComplete()\n");
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(String s) {
+                Log.i(LOG, "createMethodWidthObserver onNext()" + s);
+            }
+        }
+```
+这也就解释了程序执行的结果为helloworld的原因
 
 
 
