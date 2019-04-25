@@ -158,7 +158,7 @@ call(T t)方法里面的参数就是我们传入的**new出来的new Subscriber<
                 observer.onNext(t);
             }
 ```
-的onNext()方法，其中的observer变量就是我们一开始在我们Demo类RxJavaDemoActivity.java中的匿名类部类
+observer的onNext()方法，其中的observer变量就是我们一开始在我们Demo类RxJavaDemoActivity.java中的匿名类部类
 ```
 new Observer<String>() {
             @Override
