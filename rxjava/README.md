@@ -2,7 +2,7 @@
 #### RxJava常用方法及Demo
 1. 移步查看Git：[RxJavaDemoActivity.java](https://github.com/zhijunhong/source_analysis/blob/master/rxjava/src/main/java/fudaojun/com/rxjava/RxJavaDemoActivity.java) 类中方法
 #### RxJava源码分析
-1. 由浅入深，首先我们分析没有线程切换的情况，相对比较容易
+1. 由浅入深，首先我们分析类中没有线程切换的情况，相对比较容易
 ```
  //create 方法
  createMethodWidthObserver();
