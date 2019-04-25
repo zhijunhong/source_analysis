@@ -11,8 +11,10 @@ import java.util.List;
 import rx.Observable;
 import rx.Observer;
 import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.functions.Func2;
+import rx.schedulers.Schedulers;
 
 
 public class RxJavaDemoActivity extends AppCompatActivity {
@@ -274,22 +276,24 @@ public class RxJavaDemoActivity extends AppCompatActivity {
                 subscriber.onNext("你也好");
                 subscriber.onCompleted();
             }
-        }).subscribe(new Subscriber<String>() {
-            @Override
-            public void onCompleted() {
-                Log.i(LOG, "createMethodWithSubScribe onComplete()\n");
-            }
+        }).observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.computation())
+                .subscribe(new Subscriber<String>() {
+                    @Override
+                    public void onCompleted() {
+                        Log.i(LOG, "createMethodWithSubScribe onComplete()\n");
+                    }
 
-            @Override
-            public void onError(Throwable e) {
+                    @Override
+                    public void onError(Throwable e) {
 
-            }
+                    }
 
-            @Override
-            public void onNext(String s) {
-                Log.i(LOG, "createMethodWithSubScribe onNext()" + s);
-            }
-        });
+                    @Override
+                    public void onNext(String s) {
+                        Log.i(LOG, "createMethodWithSubScribe onNext()" + s);
+                    }
+                });
     }
 
     /**
