@@ -46,13 +46,13 @@
         return new Observable<T>(hook.onCreate(f));
     }
 ```
-> 代码里面有hook钩子方法，考虑一般情况，我们可以忽略钩子方法，最终仅是创建了Observable对象，继续跟进return new Observable<T>(hook.onCreate(f));
+ 代码里面有hook钩子方法，考虑一般情况，我们可以忽略钩子方法，最终仅是创建了Observable对象，继续跟进return new Observable<T>(hook.onCreate(f));
 ```
     protected Observable(OnSubscribe<T> f) {
         this.onSubscribe = f;
     }
 ```
->  原来Observable.create(OnSubscribe<T> f)仅是在初始化Observable<T>类的成员变量final OnSubscribe<T> onSubscribe,也就是将我们在RxJavaDemoActivity类中的匿名类部类
+ 原来Observable.create(OnSubscribe<T> f)仅是在初始化Observable<T>类的成员变量final OnSubscribe<T> onSubscribe,也就是将我们在RxJavaDemoActivity类中的匿名类部类
 ```
 new Observer<String>() {
             @Override
@@ -71,7 +71,7 @@ new Observer<String>() {
             }
         }
 ```
-> 的对象赋值给Observable<T>类的成员变量final OnSubscribe<T> onSubscribe;
+ 的对象赋值给Observable<T>类的成员变量final OnSubscribe<T> onSubscribe;
 ##### 接下来我们分析比较关键的subscribe(final Observer<? super T> observer)方法
 跟进代码
 ```
@@ -99,13 +99,13 @@ new Observer<String>() {
         });
     }
 ```
-> if分支因为不是Subscriber所以直接跳过，继续调用内部的subscribe方法
+ if分支因为不是Subscriber所以直接跳过，继续调用内部的subscribe方法
 ```
     public final Subscription subscribe(Subscriber<? super T> subscriber) {
         return Observable.subscribe(subscriber, this);
     }
 ```
-> 可以看出调用自身重载的方法，参数分别是**new出来的new Subscriber<T>()和自身this**
+ 可以看出调用自身重载的方法，参数分别是**new出来的new Subscriber<T>()和自身this**
 ```
 private static <T> Subscription subscribe(Subscriber<? super T> subscriber, Observable<T> observable) {
   //...去除验证代码
@@ -134,12 +134,12 @@ private static <T> Subscription subscribe(Subscriber<? super T> subscriber, Obse
         }
     }
 ```
-> 代码块中的onStart()方法是一个备用方法，可以在执行前调用;这里我们主要关注
+ 代码块中的onStart()方法是一个备用方法，可以在执行前调用;这里我们主要关注
 ```
 hook.onSubscribeStart(observable, observable.onSubscribe).call(subscriber);
 ```
-> 这又是一个钩子方法，我们忽略特殊情况，考虑一般性,执行hook.onSubscribeStart(observable, observable.onSubscribe)后返回的就是传入的observable.onSubscribe变量
-> **也就是第一部分赋值的Observable<T>类的成员变量final OnSubscribe<T> onSubscribe;**，在调用call(T t)方法，也就自然会调用到第一部分匿名类部类的call(T t)方法
+这又是一个钩子方法，我们忽略特殊情况，考虑一般性,执行hook.onSubscribeStart(observable, observable.onSubscribe)后返回的就是传入的observable.onSubscribe变量
+**也就是第一部分赋值的Observable<T>类的成员变量final OnSubscribe<T> onSubscribe;**，在调用call(T t)方法，也就自然会调用到第一部分匿名类部类的call(T t)方法
 ```
 new Observable.OnSubscribe<String>() {
 
@@ -151,14 +151,14 @@ new Observable.OnSubscribe<String>() {
             }
         }
 ```
-> call(T t)方法里面的参数就是我们传入的**new出来的new Subscriber<T>()** 当调用Subscriber的onNext方法后就相当于调用了
+call(T t)方法里面的参数就是我们传入的**new出来的new Subscriber<T>()** 当调用Subscriber的onNext方法后就相当于调用了
 ```
   @Override
             public void onNext(T t) {
                 observer.onNext(t);
             }
 ```
->的onNext方法，这也就解释了程序执行的结果为helloworld的原因
+的onNext方法，这也就解释了程序执行的结果为helloworld的原因
 
 
 
