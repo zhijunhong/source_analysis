@@ -65,7 +65,7 @@ new Observable.OnSubscribe<String>() {
         }
 ```
  赋值给Observable<T>类的成员变量final OnSubscribe<T> onSubscribe;
-##### 接下来我们分析比较关键的subscribe(final Observer<? super T> observer)方法
+#### 接下来我们分析比较关键的subscribe(final Observer<? super T> observer)方法
 跟进代码
 ```
  public final Subscription subscribe(final Observer<? super T> observer) {
