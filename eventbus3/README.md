@@ -1,3 +1,4 @@
+![EventBus3.0](https://github.com/greenrobot/EventBus/blob/master/EventBus-Publish-Subscribe.png)
 ## EventBus 3.0源码分析
 #### 创建EventBus3实例
 ```
