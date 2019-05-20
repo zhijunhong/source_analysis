@@ -26,7 +26,7 @@
     //key:粘性事件的class对象 value:实践对象
     private final Map<Class<?>, Object> stickyEvents;
 ```
-**Creates a new EventBus instance** EventBus3提供默认默认构造方法
+EventBus3提供默认默认构造方法 **Creates a new EventBus instance** 
 ```
 
  /**
