@@ -1,6 +1,6 @@
 ![EventBus3.0](https://github.com/greenrobot/EventBus/blob/master/EventBus-Publish-Subscribe.png)
-## EventBus 3.0源码分析
-#### 创建EventBus3实例
+# EventBus 3.0源码分析
+### 创建EventBus3实例
 ```
   /** Convenience singleton for apps using a process-wide EventBus instance. */
     public static EventBus getDefault() {
@@ -26,7 +26,7 @@
     //key:粘性事件的class对象 value:实践对象
     private final Map<Class<?>, Object> stickyEvents;
 ```
-#### EventBus3提供默认默认构造方法
+### EventBus3提供默认默认构造方法
 ```
 
  /**
@@ -59,8 +59,8 @@
     }
 ```
 
-### 注册事件过程
-#### register方法的实现
+## 注册事件过程
+### register方法的实现
 ```
  public void register(Object subscriber) {
 	//首先获取订阅者的class对象
@@ -85,7 +85,7 @@ public SubscriberMethod(Method method, Class<?> eventType, ThreadMode threadMode
 ```
  通过subscriberMethodFinder.findSubscriberMethods方法返回SubscriberMethod对象的集合，下面分析一下findSubscriberMethods方法的实现
 
-#### SubscriberMethodFinder的实现
+### SubscriberMethodFinder的实现
  > SubscriberMethodFinder类就是用来查找和缓存订阅者响应方法的信息的类。那么怎么能获得订阅者响应函数的相关信息呢？在3.0版本中,EventBus提供了一个EventBusAnnotationProcessor注解处理器来在编译期通过读取@Subscribe注解并解析，然后生成java类来保存所有订阅者关于订阅的信息，这样就比在运行时使用反射来获得这些订阅者的信息速度要快。
 ```
  List<SubscriberMethod> findSubscriberMethods(Class<?> subscriberClass) {
@@ -115,7 +115,7 @@ public SubscriberMethod(Method method, Class<?> eventType, ThreadMode threadMode
 ```
 > findUsingInfo()方法就是通过查找MyEventBusIndex类中的信息来转换成List从而获得订阅类的相关订阅方法的信息集合。
 
-#### findUsingReflection方法实现
+### findUsingReflection方法实现
 ```
 private List<SubscriberMethod> findUsingReflection(Class<?> subscriberClass) {
 	//FindState用来做订阅方法的校验和保存
@@ -179,7 +179,7 @@ private void findUsingReflectionInSingleClass(FindState findState) {
 ```
 > 上面代码运行后，订阅类的所有SubscriberMethod都已经被保存了，最后在通过getMethodsAndRelease方法返回List集合。
 
-#### subsribe()方法的实现
+### subsribe()方法的实现
 ```
 // 必须在同步代码块中调用
 private void subscribe(Object subscriber, SubscriberMethod subscriberMethod) {
@@ -262,7 +262,7 @@ EventBus通过post方法来发送一个事件，首先看看post方法的实现�
         }
     }
 ```
-#### postingSingleEvent()方法方法实现
+### postingSingleEvent()方法方法实现
 ```
 private void postSingleEvent(Object event, PostingThreadState postingState) throws Error {
 	Class<?> eventClass = event.getClass();
@@ -364,7 +364,7 @@ private void postToSubscription(Subscription subscription, Object event, boolean
 
 4. Async：不论发布线程是否为主线程，都使用一个空闲线程来处理。和BackgroundThread不同的是，Async类的所有线程是相互独立的，因此不会出现卡线程的问题。适用场景：长耗时操作，例如网络访问。
 
-#### invokeSubscriber(subscription, event)代码如下
+### invokeSubscriber(subscription, event)代码如下
 ```
 void invokeSubscriber(Subscription subscription, Object event) {
 	try {
@@ -378,7 +378,7 @@ void invokeSubscriber(Subscription subscription, Object event) {
 ```
 > 实际上就是通过反射调用了订阅者的订阅函数并把event对象作为参数传入，至此post()流程如上述所示。
 
-### 解除注册过程
+## 解除注册过程
 解除注册只要调用unregister()方法即可，实现如下：
 ```
 public synchronized void unregister(Object subscriber) {
@@ -415,6 +415,6 @@ private void unsubscribeByEventType(Object subscriber, Class<?> eventType) {
 ```
 最终分别从typesBySubscriber和subscriptions里分别移除订阅者以及相关信息即可
 
-### 设计模式
-#### 观察者模式
+## 设计模式
+### 观察者模式
 > 观察者模式是对象的行为模式，又叫发布-订阅（Publish/Subscribe）模式、模型-视图（Model/View）模式、源-监听器（Source/Listener）模式或从属者模式。观察者模式定义了一种一对多的依赖关系，让多个观察者对象同时监听某一个主题对象。这个主题对象在状态上发生变化时，会通知所有观察者对象，使它们能够自动更新自己。EventBus并不是标准的观察者模式的实现，但是它的整体就是一个发布/订阅框架，也拥有观察者模式的有点，比如：发布者和订阅者的解耦。
