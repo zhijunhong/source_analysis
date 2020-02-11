@@ -16,7 +16,7 @@
 build/
 .gradle/
 */build/
-settings.gradle
+#settings.gradle
 
 # Intellij project files
 *.iml
